@@ -1,19 +1,6 @@
-// функция открытия картинки
-function openPopUpImage(dataImage) {
-  const imagePopUp = document.querySelector('.popup_type_image');
-  const imageElement = imagePopUp.querySelector('.popup__image');
-  const imageCaption = imagePopUp.querySelector('.popup__caption');
-
-  imageElement.src = dataImage.link;
-  imageElement.alt = dataImage.name;
-  imageCaption.textContent = dataImage.name;
-
-  openPopUp(imagePopUp);
-}
-
 // функция открытия попапа
 function openPopUp(popup) {
-  popup.classList.add('popup_is-opened',  'popup_is-animated');
+  popup.classList.add('popup_is-opened');
   document.addEventListener('keydown', closePopUpEsc);
   popup.addEventListener('click', closePopUpOverlay);
 }
@@ -21,10 +8,6 @@ function openPopUp(popup) {
 // функция закрытия попапа
 function closePopUp(popup) {
   popup.classList.remove('popup_is-opened');
-  popup.addEventListener('transitionend', function handleTransitionEnd() { 
-    popup.classList.remove('popup_is-animated');
-    popup.removeEventListener('transitionend', handleTransitionEnd)
-  });
   document.removeEventListener('keydown', closePopUpEsc);
   popup.removeEventListener('click', closePopUpOverlay);
 }
@@ -44,4 +27,4 @@ function closePopUpEsc(event) {
   }
 }
 
-export { openPopUp, closePopUp, openPopUpImage }
+export { openPopUp, closePopUp }
