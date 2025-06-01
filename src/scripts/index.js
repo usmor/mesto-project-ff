@@ -1,8 +1,8 @@
 import '../pages/index.css';
-import { createCard } from './card.js';
+import { createCard, handleLikeFromServer } from './card.js';
 import { closePopUp, openPopUp } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
-import { getProfileInfo, getInitialCards, updateProfileInfo, postNewCard,deleteCardFromServer, AddOrRemoveLike, updateAvatar } from './api.js';
+import { getProfileInfo, getInitialCards, updateProfileInfo, postNewCard, deleteCardFromServer, updateAvatar } from './api.js';
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -86,7 +86,7 @@ function handleProfileFormSubmit(event) {
       closePopUp(profileFormPopUp);
     })
     .catch((error) => {
-      console.log('Ошибка:', error);
+      console.log('Ошибка при редактировании информации профиля:', error);
     })
     .finally(() => renderLoading(buttonSubmit, false));
 }
@@ -100,11 +100,10 @@ function handleAvatarFormSubmit(event) {
   updateAvatar(avatarLink)
   .then((res) => {
     profileAvatar.style.backgroundImage = `url(${res.avatar})` ;
-    console.log(profileAvatar);
     closePopUp(avatarFormPopup)
   })
   .catch((error) => {
-    console.log('Ошибка:', error);
+    console.log('Ошибка при обновлении аватарки:', error);
   })
   .finally(() => renderLoading(buttonSubmit, false));
 }
@@ -114,7 +113,6 @@ function renderProfileInfo (user) {
   profileTitle.textContent = user.name;
   profileDescription.textContent = user.about;
   profileAvatar.style.backgroundImage = `url(${user.avatar})`;
-  console.log(profileAvatar);
 }
 
 // Обработка формы "Добавить карточку"
@@ -170,10 +168,9 @@ const handleDeleteCardSubmit = (evt) => {
       cardForDelete = {};
     })
     .catch((error) => {
-      console.error('Ошибка при удалении карточки:', error);
+      console.log('Ошибка при удалении карточки:', error);
     });
 };
-
 
 function renderCards(cards) {
   cards.forEach((cardData) => {
@@ -186,10 +183,6 @@ function renderCards(cards) {
     );
     placesList.append(cardElement);
   });
-}
-
-function handleLikeFromServer(cardId, method) {
-  return AddOrRemoveLike(cardId, method)
 }
 
 // Слушатели для открытия попапов
@@ -207,8 +200,8 @@ openCardPopUp.addEventListener('click', () => {
 });
 
 profileAvatarEdit.addEventListener('click', () => {
-  clearValidation(avatarForm, validationConfig);
   avatarForm.reset();
+  clearValidation(avatarForm, validationConfig);
   openPopUp(avatarFormPopup);
 });
 
@@ -230,11 +223,10 @@ enableValidation(validationConfig);
 Promise.all([getProfileInfo(), getInitialCards()])
 .then(([user, cards]) => {
   currentUserId = user._id;
-  console.log
   renderProfileInfo(user);
   renderCards(cards)
 })
 .catch((error) => {
-  console.error('Ошибка:', error);
+  console.log('Ошибка:', error);
 });
 

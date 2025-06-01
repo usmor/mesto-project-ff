@@ -1,3 +1,4 @@
+import { AddOrRemoveLike } from "./api.js";
 const cardTemplate = document.querySelector('#card-template').content;
 
 // Функция создания карточки
@@ -52,8 +53,12 @@ function createCard(
 
   // Открытие попапа с картинкой
   placeImage.addEventListener('click', () => openPopUpImage(placeData));
-
+  
   return placeItem;
 }
 
-export { createCard };
+function handleLikeFromServer(cardId, method) {
+  return AddOrRemoveLike(cardId, method)
+}
+
+export { createCard, handleLikeFromServer };
